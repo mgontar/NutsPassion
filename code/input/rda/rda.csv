@@ -1,0 +1,33 @@
+nut_code,rda,mda,ukr_name,eng_name
+VITA,900,3000,Вітамін A,Vitamin A
+VITC,90,2000,Вітамін C,Vitamin C
+VITD,15,100,Вітамін D,Vitamin D
+VITE,15,1000,Вітамін E,Vitamin E
+VITK1,120,N/A,Вітамін K,Vitamin K
+THIA,1.2,N/A,Вітамін B1,Vitamin B1
+RIBF,1.3,N/A,Вітамін B2 (Рибофлавін),Vitamin B2
+NIA,16,35,Вітамін B3 (Нікотинова кислота),Vitamin B3
+VITB6A,1.3,100,Вітамін B6,Vitamin B6
+VITB9,400,1000,Вітамін B9 (Фолієва кислота),Vitamin B9
+VITB12,2.4,N/A,Вітамін B12,Vitamin B12
+PANTAC,5,N/A,Вітамін B5 (Пантотенова кислота),Vitamin B5
+CHOLN,550,3500,Вітамін B4 (Холін),Vitamin B4
+CA,1000,2500,Кальцій,Calcium
+CU,900,10000,Мідь,Copper
+FLD,4,10,Фтор,Fluorine
+I,150,1100,Йод,Iodine
+FE,8,45,Залізо,Iron
+MG,420,4200,Магній,Magnesium
+MN,2.3,11,Марганець,Manganese
+P,700,4000,Фосфор,Phosphorus
+SE,55,400,Селен,Selenium
+ZN,11,40,Цинк,Zinc
+K,4.7,N/A,Калій,Potassium
+NA,1.5,2.3,Натрій,Sodium
+CHOCDF,410,N/A,Вуглеводи,Carbohydrate
+FIBTG,38,N/A,Волокна,Fibers
+FAT,98,200,Жири,Fats
+OMG3,1.6,N/A,Омега-3,Omega-3
+OMG6,17,N/A,Омега-6,Omega-6
+PROCNT,102,300,Білки,Proteins
+ENERC_KCAL,3000,7000,Енергія,Energy

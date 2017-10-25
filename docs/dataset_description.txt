@@ -1,0 +1,34 @@
+To prepare data for our model we have used 4 types of datasets:
+Food nutrients information from USDA [1] and AUSNUT [2] datasets
+Nutrients recommended and upper limit daily intakes from “DRI: Dietary Reference Intakes” report by Institute of Medicine of the National Academy of Sciences [3], other publications on NCBI web resource [4], “Human energy requirements” report by FAO/WHO/UNU [5]
+Prices on food in Ukraine by State Statistics Service of Ukraine [6], online food store Auchan [7] and grocery market Shuvar [8]
+Our custom datasets like cooking coefficients, join tables, header lists, units conversion, nutrients unification, translation, etc
+
+We have selected 61 basic food products (43 raw products + 18 cooked states) and 33 parameters for each product (25 nutrients, 6 macronutrients, energy and price). Since USDA database had no information on Iodine, Omega-3 and Omega-6 nutrients, we decided to use additionally AUSNUT database, where these measurements were done. For proper calculations, we have joined plain and added nutrients, like in case of vitamin E, which were measured in USDA dataset separately.
+
+As a result, we have a product/nutrient pivot table, prices table and RDI table - thіs data we are using in our model.
+
+(for References section)
+[1] National Nutrient Database for Standard Reference Release 28
+https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/
+
+[2] Food Standards Australia New Zealand AUSNUT 2011-2013 Database
+http://www.foodstandards.gov.au/science/monitoringnutrients/ausnut/Pages/default.aspx
+
+[3] "DRI: Dietary Reference Intakes", Committee to Review Dietary Reference Intakes for Vitamin D and Calcium Food and Nutrition Board © 2011, Institute of Medicine of the National Academy of Sciences
+https://www.ncbi.nlm.nih.gov/books/NBK56068/
+
+[4] Dietary protein intake and human health
+https://www.ncbi.nlm.nih.gov/pubmed/26797090
+
+[5] Human energy requirements Report of a Joint FAO/WHO/UNU Expert Consultation
+http://www.fao.org/docrep/007/y5686e/y5686e08.htm
+
+[6] State Statistics Service of Ukraine - consumer market monitoring
+http://www.ukrstat.gov.ua/operativ/operativ2015/ct/mon_c/mon_c.htm
+
+[7] Auchan online food store
+https://auchan.zakaz.ua/en/
+
+[8] Shuvar grocery market prices
+https://info.shuvar.com/price
