@@ -31,3 +31,4 @@ ukr_name,eng_name,Tagname,rda,mda,Units
 Омега-6,Omega-6,OMG6,17.0,,g
 Білки,Proteins,PROCNT,102.0,300.0,g
 Енергія,Energy,ENERC_KCAL,3000.0,7000.0,kcal
+Ситість,Fullness,,,,

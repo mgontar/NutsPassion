@@ -1,3 +1,4 @@
+
 # coding: utf-8
 
 import pandas as pd
@@ -13,7 +14,7 @@ dict_prep_eng = {"raw":" (raw)", "canned": " (canned)", "boiled":" (boiled)", "r
 
 prod_name = pd.read_csv('input\\custom\\product_names.csv', sep = ",", quotechar = "\"", encoding='utf-8', keep_default_na=False, 
                        na_values=['N/A'])
-prod_name = product_names[['name_ukr', 'name_eng']].copy()
+prod_name = prod_name[['name_ukr', 'name_eng']].copy()
 prod_name.to_csv("output\\product_names.csv", sep=',', quotechar = "\"", quoting = csv.QUOTE_NONNUMERIC, encoding='utf-8', index=False)
 
 
@@ -81,7 +82,7 @@ ausn_prod_nutr_sel_omg3.loc[:,"Units"] = "g"
 ausn_prod_nutr_sel_omg3 = ausn_prod_nutr_sel_omg3.rename(columns={'Alpha-linolenic acid (g)': 'Nutr_Val'})
 
 ausn_prod_nutr_sel_full = pd.concat([ausn_prod_nutr_sel_iod, ausn_prod_nutr_sel_omg6, ausn_prod_nutr_sel_omg3], ignore_index = True)
-ausn_prod_nutr_data = pd.merge(ausn_prod_nutr_sel_full, product_names, how='inner', left_on="name", right_on="name_ukr")
+ausn_prod_nutr_data = pd.merge(ausn_prod_nutr_sel_full, prod_name, how='inner', left_on="name", right_on="name_ukr")
 ausn_prod_nutr_data.loc[:,'name_prep'] = ausn_prod_nutr_data['name']+ausn_prod_nutr_data['prep'].apply(lambda x: dict_prep_ukr[x])
 ausn_prod_nutr_data.loc[:,'name_prep_eng'] = ausn_prod_nutr_data['name_eng']+ausn_prod_nutr_data['prep'].apply(lambda x: dict_prep_eng[x])
 
@@ -127,8 +128,8 @@ ukrs_prod_pric = pd.read_csv('input\\prices\\ukrstat_price.csv', sep = ",", enco
 cust_prod_pric = pd.read_csv('input\\prices\\custom_price.csv', sep = ",", encoding='utf-8')
 new_head = ['name']
 new_head.extend(ukrs_prod_pric.columns[1:].values.tolist())
-ukrs_prod_pric.columns = new_header
-cust_prod_pric.columns = new_header
+ukrs_prod_pric.columns = new_head
+cust_prod_pric.columns = new_head
 prod_pric = pd.concat([ukrs_prod_pric, cust_prod_pric])
 
 prod_nutr_rda_pric_data = pd.merge(prod_nutr_rda_data, prod_pric, how='left', left_on="name", right_on="name")
@@ -143,7 +144,7 @@ prod_pric_coef_data = prod_pric_coef_data[['name_prep_eng', 'price_kg_uah']].cop
 
 sorter = usda_join.name_prep_eng.values
 sorter_index = dict(zip(sorter,range(len(sorter))))
-prod_pric_coef_data['name_prep_Rank'] = price_data_coeff['name_prep_eng'].map(sorter_index)
+prod_pric_coef_data['name_prep_Rank'] = prod_pric_coef_data['name_prep_eng'].map(sorter_index)
 prod_pric_coef_data.sort_values(['name_prep_Rank'], ascending = [True], inplace = True)
 prod_pric_coef_data.drop('name_prep_Rank', 1, inplace = True)
 
@@ -161,4 +162,24 @@ prod_nutr_rda_data_cut_pivt = prod_nutr_rda_data_cut_pivt.reindex(nutr_rda.eng_n
 prod_nutr_rda_data_cut_pivt = prod_nutr_rda_data_cut_pivt[usda_join.name_prep_eng]
 prod_nutr_rda_data_cut_pivt.to_csv("output\\data_pivot.csv", sep=',', encoding='utf-8')
 prod_nutr_rda_data_cut_pivt.to_excel("output\\data_pivot.xlsx", encoding='utf-8')
+
+
+# Experimental Fullness Factor
+def calcFullness(row):
+    cal = max(30,row["Energy"]/10)
+    pr = max(30,row["Proteins"]/10)
+    fib = max(12,row["Fibers"]/10)
+    fat = max(50,row["Fats"]/10)
+    cal_part = 0 if cal==0 else 41.7/pow(cal,0.7)
+    return round(max(0.5, min(5.0, cal_part  + 0.05*pr + 6.17E-4*pow(fib,3) - 7.25E-6*pow(fat,3) + 0.617)),2)
+
+
+prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut.pivot_table(index='eng_name', columns='name_prep_eng', values='Nutr_Val', 
+                      aggfunc = np.sum, dropna = False, fill_value = 0).T
+prod_nutr_rda_data_cut_pivt2["Fullness"] = prod_nutr_rda_data_cut_pivt2.apply(calcFullness, axis=1)
+prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut_pivt2.T
+prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut_pivt2.reindex(nutr_rda.eng_name)
+prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut_pivt2[usda_join.name_prep_eng]
+prod_nutr_rda_data_cut_pivt2.to_csv("output\\data_pivot_fullness.csv", sep=',', encoding='utf-8')
+prod_nutr_rda_data_cut_pivt2.to_excel("output\\data_pivot_fullness.xlsx", encoding='utf-8')
 
