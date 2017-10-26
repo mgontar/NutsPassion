@@ -3,18 +3,17 @@ ukr_name,eng_name,Tagname,rda,mda,Units
 Вітамін C,Vitamin C,VITC,90.0,2000.0,mg
 Вітамін D,Vitamin D,VITD,15.0,100.0,µg
 Вітамін E,Vitamin E,VITE,15.0,1000.0,mg
-Вітамін K,Vitamin K,VITK1,120.0,,µg
-Вітамін B1,Vitamin B1,THIA,1.2,,mg
-Вітамін B2 (Рибофлавін),Vitamin B2,RIBF,1.3,,mg
+Вітамін K,Vitamin K,VITK1,120.0,1000000.0,µg
+Вітамін B1,Vitamin B1,THIA,1.2,1000000.0,mg
+Вітамін B2 (Рибофлавін),Vitamin B2,RIBF,1.3,1000000.0,mg
 Вітамін B3 (Нікотинова кислота),Vitamin B3,NIA,16.0,35.0,mg
 Вітамін B6,Vitamin B6,VITB6A,1.3,100.0,mg
 Вітамін B9 (Фолієва кислота),Vitamin B9,VITB9,400.0,1000.0,µg
-Вітамін B12,Vitamin B12,VITB12,2.4,,µg
-Вітамін B5 (Пантотенова кислота),Vitamin B5,PANTAC,5.0,,mg
+Вітамін B12,Vitamin B12,VITB12,2.4,1000000.0,µg
+Вітамін B5 (Пантотенова кислота),Vitamin B5,PANTAC,5.0,1000000.0,mg
 Вітамін B4 (Холін),Vitamin B4,CHOLN,550.0,3500.0,mg
 Кальцій,Calcium,CA,1000.0,2500.0,mg
 Мідь,Copper,CU,0.9,10.0,mg
-Фтор,Fluorine,FLD,4000.0,10000.0,µg
 Йод,Iodine,I,150.0,1100.0,µg
 Залізо,Iron,FE,8.0,45.0,mg
 Магній,Magnesium,MG,420.0,4200.0,mg
@@ -22,13 +21,12 @@ ukr_name,eng_name,Tagname,rda,mda,Units
 Фосфор,Phosphorus,P,700.0,4000.0,mg
 Селен,Selenium,SE,55.0,400.0,µg
 Цинк,Zinc,ZN,11.0,40.0,mg
-Калій,Potassium,K,4700.0,,mg
+Калій,Potassium,K,4700.0,1000000000.0,mg
 Натрій,Sodium,NA,1500.0,2300.0,mg
-Вуглеводи,Carbohydrate,CHOCDF,410.0,,g
-Волокна,Fibers,FIBTG,38.0,,g
+Вуглеводи,Carbohydrate,CHOCDF,410.0,1000000.0,g
+Волокна,Fibers,FIBTG,38.0,1000000.0,g
 Жири,Fats,FAT,98.0,200.0,g
-Омега-3,Omega-3,OMG3,1.6,,g
-Омега-6,Omega-6,OMG6,17.0,,g
+Омега-3,Omega-3,OMG3,1.6,1000000.0,g
+Омега-6,Omega-6,OMG6,17.0,1000000.0,g
 Білки,Proteins,PROCNT,102.0,300.0,g
 Енергія,Energy,ENERC_KCAL,3000.0,7000.0,kcal
-Ситість,Fullness,,,,

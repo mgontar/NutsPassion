@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import csv
 
-
 dict_prep_ukr = {"raw":" (без обробки)", "canned": " (консерва)", "boiled":" (варіння)", "roasted":" (смаження)"}
 dict_prep_eng = {"raw":" (raw)", "canned": " (canned)", "boiled":" (boiled)", "roasted":" (roasted)"}
 
@@ -16,7 +15,6 @@ prod_name = pd.read_csv('input\\custom\\product_names.csv', sep = ",", quotechar
                        na_values=['N/A'])
 prod_name = prod_name[['name_ukr', 'name_eng']].copy()
 prod_name.to_csv("output\\product_names.csv", sep=',', quotechar = "\"", quoting = csv.QUOTE_NONNUMERIC, encoding='utf-8', index=False)
-
 
 # USDA product nutrients database
 
@@ -34,6 +32,13 @@ usda_join = pd.concat([usda_ukrs_join, usda_cust_join], ignore_index = True)
 usda_join = pd.merge(usda_join, prod_name, how='inner', left_on="name", right_on="name_ukr")
 usda_join['name_prep'] = usda_join['name']+usda_join['prep'].apply(lambda x: dict_prep_ukr[x])
 usda_join['name_prep_eng'] = usda_join['name_eng']+usda_join['prep'].apply(lambda x: dict_prep_eng[x])
+
+prod_skip_list = pd.read_csv('input\\custom\\products_skip_list.csv', sep = ",", encoding='utf-8', header = None)
+prod_skip_list = prod_skip_list[0].values.tolist()
+#Skip raw uneatable prodcuts
+usda_join = usda_join[~usda_join['name_prep'].isin(prod_skip_list)]
+
+
 usda_prod_desc = pd.merge(usda_join, usda_prod_desc, how='inner', left_on="usda_id", right_on="NDB_No")
 
 usda_nutr_head = pd.read_csv('input\\custom\\headers\\NUT_DATA_HEAD.txt', sep = ",", encoding='utf-8', header = None)
@@ -86,6 +91,9 @@ ausn_prod_nutr_data = pd.merge(ausn_prod_nutr_sel_full, prod_name, how='inner', 
 ausn_prod_nutr_data.loc[:,'name_prep'] = ausn_prod_nutr_data['name']+ausn_prod_nutr_data['prep'].apply(lambda x: dict_prep_ukr[x])
 ausn_prod_nutr_data.loc[:,'name_prep_eng'] = ausn_prod_nutr_data['name_eng']+ausn_prod_nutr_data['prep'].apply(lambda x: dict_prep_eng[x])
 
+#Skip raw uneatable prodcuts same way as in USDA
+ausn_prod_nutr_data = ausn_prod_nutr_data[~ausn_prod_nutr_data['name_prep'].isin(prod_skip_list)]
+
 prod_nutr_data = pd.concat([usda_prod_nutr_data, ausn_prod_nutr_data], ignore_index = True)
 
 
@@ -93,6 +101,9 @@ prod_nutr_data = pd.concat([usda_prod_nutr_data, ausn_prod_nutr_data], ignore_in
 
 nutr_rda = pd.read_csv('input\\rda\\rda.csv', sep = ",", encoding='utf-8', keep_default_na=False, 
                        na_values=['N/A'])
+
+# Fill missing values with some large constants
+nutr_rda = nutr_rda.fillna(1000000)
 
 # Unify rda and nutrients measures to single units
 
@@ -111,6 +122,9 @@ nutr_rda.loc[nutr_rda["nut_code"] == "NA", "mda"] *= 1000
 # RDA in L (kg) while USDA in g
 nutr_rda.loc[nutr_rda["nut_code"] == "WATER", "rda"] *= 1000
 nutr_rda.loc[nutr_rda["nut_code"] == "WATER", "mda"] *= 1000
+
+# Remove Fluorine since it is present in water 
+nutr_rda = nutr_rda[nutr_rda.nut_code != "FLD"]
 
 prod_nutr_rda_data = pd.merge(nutr_rda, prod_nutr_data, how='left', left_on="nut_code", right_on="Tagname")
 
@@ -177,9 +191,16 @@ def calcFullness(row):
 prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut.pivot_table(index='eng_name', columns='name_prep_eng', values='Nutr_Val', 
                       aggfunc = np.sum, dropna = False, fill_value = 0).T
 prod_nutr_rda_data_cut_pivt2["Fullness"] = prod_nutr_rda_data_cut_pivt2.apply(calcFullness, axis=1)
-prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut_pivt2.T
-prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut_pivt2.reindex(nutr_rda.eng_name)
-prod_nutr_rda_data_cut_pivt2 = prod_nutr_rda_data_cut_pivt2[usda_join.name_prep_eng]
-prod_nutr_rda_data_cut_pivt2.to_csv("output\\data_pivot_fullness.csv", sep=',', encoding='utf-8')
-prod_nutr_rda_data_cut_pivt2.to_excel("output\\data_pivot_fullness.xlsx", encoding='utf-8')
+prod_full = prod_nutr_rda_data_cut_pivt2.T.unstack().reset_index(name='value')
+prod_full = prod_full.loc[prod_full.eng_name=="Fullness"]
+prod_full = prod_full.rename(columns={'value': 'fullness'})
+prod_full = prod_full[['name_prep_eng', 'fullness']]
+sorter = usda_join.name_prep_eng.values
+sorter_index = dict(zip(sorter,range(len(sorter))))
+prod_full['name_prep_Rank'] = df['name_prep_eng'].map(sorter_index)
+prod_full.sort_values(['name_prep_Rank'], ascending = [True], inplace = True)
+prod_full.drop('name_prep_Rank', 1, inplace = True)
+
+prod_full.to_csv("output\\data_pivot_fullness.csv", sep=',', encoding='utf-8', index=False)
+prod_full.to_excel("output\\data_pivot_fullness.xlsx", encoding='utf-8', index=False)
 
