@@ -102,3 +102,6 @@ ENV/
 
 # windows crap
 desktop.ini
+
+# R files
+.Rhistory

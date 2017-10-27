@@ -24,6 +24,8 @@ shinyUI(fluidPage(
                   "text/csv",
                   "text/comma-separated-values,text/plain",
                   ".csv")),
+      sliderInput("price_disturb", "Price disturbance",
+                  min = 0, max = 0.1, value = 0, step = 0.01),
       submitButton("Run")
     ),
     
