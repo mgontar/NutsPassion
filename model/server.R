@@ -6,9 +6,9 @@ library(scales)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   # Executed once, as application starts
-  prod <- read.csv(url("https://raw.githubusercontent.com/mgontar/NutsPassion/master/shinyApp/data_snapshot/products.csv"))
-  nutr <- read.csv(url("https://raw.githubusercontent.com/mgontar/NutsPassion/master/shinyApp/data_snapshot/matrix.csv"))
-  rda_pre <- read.csv(url("https://raw.githubusercontent.com/mgontar/NutsPassion/master/shinyApp/data_snapshot/rda.csv"))
+  prod <- read.csv(url("https://raw.githubusercontent.com/mgontar/NutsPassion/master/data/output/data_price.csv"))
+  nutr <- read.csv(url("https://raw.githubusercontent.com/mgontar/NutsPassion/master/data/output/data_pivot.csv"))
+  rda_pre <- read.csv(url("https://raw.githubusercontent.com/mgontar/NutsPassion/master/data/output/data_rda.csv"))
   
   #Executed on each update of parameters
   readData <- reactive({
@@ -23,8 +23,8 @@ shinyServer(function(input, output) {
     name_prod <- as.character(prod[,1])
     price <- prod[,2]
     nutr <- as.matrix(nutr[,-1])
-    rda <- rda_pre[,2]
-    mda <- rda_pre[,3]
+    rda <- rda_pre %>% pull(rda)
+    mda <- rda_pre %>% pull(mda)
     
     list(price = price, nutr = nutr, mda = mda, rda = rda, name_prod = name_prod)
   }) 
