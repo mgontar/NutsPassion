@@ -1,5 +1,5 @@
 # NutsPassion
-UCU "Intro to DataScience" course project
+UCU "Intro to DataScience" course project & Queen's International Innovation Challenge
 
 Using linear optimization we developed diet for people who live at subsistence wage in Ukraine. Proposed diets satisfies all the nutrition needs for adult people.
 
