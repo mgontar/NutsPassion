@@ -32,7 +32,7 @@ shinyServer(function(input, output) {
   # Apply simplex model to the data provided
   applySimplex <- reactive({
     dataSource <- readData()
-    price_disturbance <- 1 + rnorm(n = length(dataSource$price), mean = 0, sd = input$price_disturb)
+    price_disturbance <- 1 + rnorm(n = length(dataSource$price), mean = 0, sd = input$price_volatility/100) # conv from % to fracction of unit 
     result <- boot::simplex(a = dataSource$price*price_disturbance, A1 = dataSource$nutr, b1 = dataSource$mda, A2 = dataSource$nutr, b2 = dataSource$rda)
     
     res <- result$soln
@@ -51,6 +51,7 @@ shinyServer(function(input, output) {
     res <- applySimplex()
     gg <- ggplot(res, aes(x = "", y = value, fill = name)) + 
       geom_bar(width = 1, stat = "identity") + 
+      theme_void() + 
       coord_polar("y", start = 0) +
       theme(axis.text.x = element_blank()) +
       geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]),
