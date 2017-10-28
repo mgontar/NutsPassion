@@ -37,27 +37,36 @@ shinyServer(function(input, output) {
     
     res <- result$soln
     names(res) <- dataSource$name_prod
-    res <- as.data.frame(cbind(name = dataSource$name_prod, value = res))
-    res$name <- as.character(res$name)
-    res$value <- as.numeric(as.character(res$value))
-    res <- res[res$value>0,]
+    res <- as.data.frame(cbind(product = dataSource$name_prod, units = res, unit_price = dataSource$price))
+    res$product <- as.character(res$product)
+    res$units <- as.numeric(as.character(res$units))
+    res$unit_price <- as.numeric(as.character(res$unit_price))
+    res <- res[res$units>0,] %>% arrange(desc(units*unit_price))
+    res$product <- factor(res$product, levels = res$product)
     
     res
   })
   
   
   # Generation of plot
-  output$dietTable <- renderPlot({
+  output$dietPlot <- renderPlot({
     res <- applySimplex()
-    gg <- ggplot(res, aes(x = "", y = value, fill = name)) + 
+    gg <- ggplot(res, aes(x = "", y = units*unit_price, fill = product)) + 
       geom_bar(width = 1, stat = "identity") + 
       theme_void() + 
       coord_polar("y", start = 0) +
       theme(axis.text.x = element_blank()) +
-      geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]),
-                    label = percent(value/100)), size = 5)
+      ggtitle(paste0(round(sum(res$units*res$unit_price), digits = 2),"UAH (", round(sum(res$units*res$unit_price)*0.037, digits = 2),  "$) daily basket cost distribution")) +
+      theme(plot.title = element_text(hjust = 0.5, size = 24, face = "bold"))
     
     plot(gg)
+  })
+  
+  output$dietTable <- renderTable({
+    res <- applySimplex()
+    res <- res %>% mutate(price_per_product = units*unit_price)
+    names(res) <- c("Product", "Units", "Price per unit (UAH)", "Price of given product (UAH)")
+    res
   })
   
 })
