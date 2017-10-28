@@ -33,7 +33,11 @@ shinyServer(function(input, output) {
   applySimplex <- reactive({
     dataSource <- readData()
     price_disturbance <- 1 + rnorm(n = length(dataSource$price), mean = 0, sd = input$price_volatility/100) # conv from % to fracction of unit 
-    result <- boot::simplex(a = dataSource$price*price_disturbance, A1 = dataSource$nutr, b1 = dataSource$mda, A2 = dataSource$nutr, b2 = dataSource$rda)
+    result <- boot::simplex(a = dataSource$price*price_disturbance, 
+                            A1 = rbind(dataSource$nutr,diag(length(dataSource$price))), 
+                            b1 = c(dataSource$mda,rep(input$product_boundary/1000, length(dataSource$price))), 
+                            A2 = dataSource$nutr, 
+                            b2 = dataSource$rda)
     
     res <- result$soln
     names(res) <- dataSource$name_prod
@@ -64,8 +68,8 @@ shinyServer(function(input, output) {
   
   output$dietTable <- renderTable({
     res <- applySimplex()
-    res <- res %>% mutate(price_per_product = units*unit_price)
-    names(res) <- c("Product", "Units", "Price per unit (UAH)", "Price of given product (UAH)")
+    res <- res %>% mutate(price_per_product = units*unit_price, units = as.integer(round(units*1000)))
+    names(res) <- c("Product", "Weight, g", "Price per kg (UAH)", "Price of given product (UAH)")
     res
   })
   

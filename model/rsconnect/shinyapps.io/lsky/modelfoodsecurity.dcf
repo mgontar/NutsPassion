@@ -5,8 +5,9 @@ account: lsky
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 230022
-bundleId: 1049219
+bundleId: 1049511
 url: https://lsky.shinyapps.io/modelfoodsecurity/
-when: 1509160711.04988
+when: 1509191871.40122
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: model_script.R

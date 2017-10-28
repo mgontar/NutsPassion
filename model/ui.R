@@ -26,6 +26,8 @@ shinyUI(fluidPage(
                   ".csv")),
       sliderInput("price_volatility", "Price volatility, %",
                   min = 0, max = 10, value = 0, step = 1),
+      sliderInput("product_boundary", "Product units no more than, g",
+                  min = 100, max = 500, value = 250, step = 5),
       submitButton("Run")
     ),
     
