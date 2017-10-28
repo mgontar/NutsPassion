@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import csv
 
+
 dict_prep_ukr = {"raw":" (без обробки)", "canned": " (консерва)", "boiled":" (варіння)", "roasted":" (смаження)"}
 dict_prep_eng = {"raw":" (raw)", "canned": " (canned)", "boiled":" (boiled)", "roasted":" (roasted)"}
 
@@ -14,7 +15,8 @@ dict_prep_eng = {"raw":" (raw)", "canned": " (canned)", "boiled":" (boiled)", "r
 prod_name = pd.read_csv('input\\custom\\product_names.csv', sep = ",", quotechar = "\"", encoding='utf-8', keep_default_na=False, 
                        na_values=['N/A'])
 prod_name = prod_name[['name_ukr', 'name_eng']].copy()
-prod_name.to_csv("output\\product_names.csv", sep=',', quotechar = "\"", quoting = csv.QUOTE_NONNUMERIC, encoding='utf-8', index=False)
+prod_name.to_csv("output\\prod_names.csv", sep=',', quotechar = "\"", quoting = csv.QUOTE_NONNUMERIC, encoding='utf-8', index=False)
+
 
 # USDA product nutrients database
 
@@ -129,11 +131,9 @@ nutr_rda = nutr_rda[nutr_rda.nut_code != "FLD"]
 prod_nutr_rda_data = pd.merge(nutr_rda, prod_nutr_data, how='left', left_on="nut_code", right_on="Tagname")
 
 unit_data = prod_nutr_rda_data[['Tagname', 'Units']].copy().drop_duplicates()
-unit_data.to_csv("output\\data_units.csv", sep=',', encoding='utf-8', index=False)
 
 rda_unit_data = prod_nutr_rda_data[['ukr_name', 'eng_name', 'Tagname', 'rda', 'mda', 'Units']].copy().drop_duplicates()
 rda_unit_data.to_csv("output\\data_rda.csv", sep=',', encoding='utf-8', index=False)
-rda_unit_data.to_excel("output\\data_rda.xlsx", encoding='utf-8', index=False)
 
 
 # Product prices
@@ -148,7 +148,6 @@ prod_pric = pd.concat([ukrs_prod_pric, cust_prod_pric])
 
 prod_nutr_rda_pric_data = pd.merge(prod_nutr_rda_data, prod_pric, how='left', left_on="name", right_on="name")
 prod_prep_name = prod_nutr_rda_pric_data[['name_prep']].copy().drop_duplicates()
-prod_prep_name.to_csv("output\\data_name.csv", sep=',', encoding='utf-8', index=False)
 
 prod_pric_data = prod_nutr_rda_pric_data[['name_prep', 'name_prep_eng', 'price_kg_uah']].drop_duplicates()
 weig_chng_coef = pd.read_csv('input\\custom\\prep_weight_change_coef.csv', sep = ",", encoding='utf-8')
@@ -163,7 +162,6 @@ prod_pric_coef_data.sort_values(['name_prep_Rank'], ascending = [True], inplace 
 prod_pric_coef_data.drop('name_prep_Rank', 1, inplace = True)
 
 prod_pric_coef_data.to_csv("output\\data_price.csv", sep=',', encoding='utf-8', index=False)
-prod_pric_coef_data.to_excel("output\\data_price.xlsx", encoding='utf-8', index=False)
 
 
 # Final product/nutrient pivot table
@@ -175,7 +173,6 @@ prod_nutr_rda_data_cut_pivt = prod_nutr_rda_data_cut.pivot_table(index='name_pre
 prod_nutr_rda_data_cut_pivt = prod_nutr_rda_data_cut_pivt.reindex(nutr_rda.eng_name)
 prod_nutr_rda_data_cut_pivt = prod_nutr_rda_data_cut_pivt[usda_join.name_prep_eng]
 prod_nutr_rda_data_cut_pivt.to_csv("output\\data_pivot.csv", sep=',', encoding='utf-8')
-prod_nutr_rda_data_cut_pivt.to_excel("output\\data_pivot.xlsx", encoding='utf-8')
 
 
 # Experimental Fullness Factor
@@ -197,10 +194,9 @@ prod_full = prod_full.rename(columns={'value': 'fullness'})
 prod_full = prod_full[['name_prep_eng', 'fullness']]
 sorter = usda_join.name_prep_eng.values
 sorter_index = dict(zip(sorter,range(len(sorter))))
-prod_full['name_prep_Rank'] = df['name_prep_eng'].map(sorter_index)
+prod_full['name_prep_Rank'] = prod_full['name_prep_eng'].map(sorter_index)
 prod_full.sort_values(['name_prep_Rank'], ascending = [True], inplace = True)
 prod_full.drop('name_prep_Rank', 1, inplace = True)
 
-prod_full.to_csv("output\\data_pivot_fullness.csv", sep=',', encoding='utf-8', index=False)
-prod_full.to_excel("output\\data_pivot_fullness.xlsx", encoding='utf-8', index=False)
+prod_full.to_csv("output\\data_fullness.csv", sep=',', encoding='utf-8', index=False)
 
