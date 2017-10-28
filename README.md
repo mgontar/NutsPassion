@@ -5,6 +5,7 @@ Using linear optimization we developed diet for people who live at subsistence w
 
 Project consists of 2 Foldes:
 1) Data Folder. Contained raw data, iPython script for data processing, final data set and its description
+
 Final Dataset: https://github.com/mgontar/NutsPassion/tree/master/data/output
 
 2) Model Folder.
