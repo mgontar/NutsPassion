@@ -13,6 +13,7 @@ Contains R-script for building miminal unconstarined model, model with constrais
 Contains Shiny.app for visualisation of the solution
 
 Final model script: https://github.com/mgontar/NutsPassion/blob/master/model/model_script.R
+
 Link to Shiny visualisation: https://lsky.shinyapps.io/modelfoodsecurity/
 
 
