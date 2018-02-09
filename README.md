@@ -3,6 +3,8 @@ UCU "Intro to DataScience" course project & Queen's International Innovation Cha
 
 Using linear optimization we developed diet for people who live at subsistence wage in Ukraine. Proposed diets satisfies all the nutrition needs for adult people.
 
+Final Report: https://github.com/OlgaChernytska/DSProject/blob/master/FInal_Report.pdf
+
 Project consists of 2 Foldes:
 1) Data Folder. Contained raw data, iPython script for data processing, final data set and its description
 
